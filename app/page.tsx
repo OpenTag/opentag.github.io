@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Heart, UserCircle, ShieldCheck } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import BlurIn from "@/components/ui/blur-in";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
