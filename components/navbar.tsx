@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
 import { TagIcon } from "lucide-react"
+import Image from "next/image"
 
 export function Navbar() {
   return (
@@ -12,7 +13,7 @@ export function Navbar() {
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <TagIcon className="h-6 w-6 mr-2" />
+              <Image src="/opentag.png" alt="OpenTag" width={40} height={40} className="mr-2" />
               <span className="font-bold text-xl hidden sm:inline">OpenTag</span>
             </Link>
           </div>

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Heart, UserCircle, ShieldCheck } from "lucide-react";
 import Link from "next/link";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import BlurIn from "@/components/ui/blur-in";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -28,37 +28,42 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    (<div className="min-h-screen bg-background text-foreground">
       {/* Hero Section */}
-      <section className="relative py-16 px-4 sm:px-6 lg:px-8 max-w-screen">
+      <section className="relative py-16 px-4 sm:px-6 lg:px-8 min-h-screen">
         <div className="max-w-7xl mx-auto">
           <div className="text-center flex flex-col items-center">
-            <div className="relative">
-              <div className="relative w-24 h-24">
-                <div className="absolute inset-0 rounded-full bg-gray-200 dark:bg-gray-700 animate-ping"></div>
-                <Image src="/opentag.png" layout="fill" objectFit="cover" alt="Medical Logo" className="rounded-full" />
-              </div>
-            </div>
-            <BlurIn
-              word="OpenTag"
-              className="text-4xl sm:text-5xl font-bold tracking-tight text-red-600 dark:text-red-500 pt-10"
-            />
-            <BlurIn
-              word="Fun Fact - A QR Code can save your life."
-              className="mt-4 max-w-2xl mx-auto text-lg sm:text-xl text-muted-foreground"
-            />
-            <div className="mt-8 flex flex-col sm:flex-row gap-4">
-              {/* <Button asChild size="lg">
-                <Link href="/register">Get Your MedTag</Link>
-              </Button>
-              <Button variant="outline" size="lg" asChild>
-                <Link href="/about">Learn More</Link>
-              </Button> */}
-            </div>
+          <div className="relative w-32 h-32 sm:w-48 sm:h-48">
+          <Image
+            src="/opentag.png"
+            alt="Medical Logo"
+            className="rounded-full"
+            fill
+            sizes="100vw"
+            style={{
+            objectFit: "cover"
+            }} 
+          />
+          </div>
+        <BlurIn
+          word="OpenTag"
+          className="text-5xl sm:text-6xl font-bold tracking-tight text-red-600 dark:text-red-500 pt-10"
+        />
+        <BlurIn
+          word="Fun Fact - A QR Code can save your life."
+          className="max-w-2xl mx-auto text-xl sm:text-2xl text-muted-foreground"
+        />
+        <div className="mt-8 flex flex-col sm:flex-row gap-4">
+          {/* <Button asChild size="lg">
+            <Link href="/register">Get Your MedTag</Link>
+          </Button>
+          <Button variant="outline" size="lg" asChild>
+            <Link href="/about">Learn More</Link>
+          </Button> */}
+        </div>
           </div>
         </div>
       </section>
-
       {/* Features Section */}
       <section className="py-12 sm:py-16 bg-muted/50 dark:bg-muted/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -87,7 +92,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {/* CTA Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center">
@@ -100,15 +104,13 @@ export default function Home() {
           </Button>
         </div>
       </section>
-
       {/* Find a Tag Dialog */}
       <Button
-        className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 bg-primary text-primary-foreground hover:bg-primary-hover dark:bg-primary-dark dark:text-primary-foreground-dark"
+        className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 bg-red-600 text-white hover:bg-red-700 dark:bg-red-500 dark:text-white"
         onClick={handleOpenDialog}
       >
         Find a Tag
       </Button>
-
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -133,6 +135,6 @@ export default function Home() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </div>)
   );
 }
