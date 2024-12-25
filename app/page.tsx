@@ -7,24 +7,24 @@ import {HealthArticle} from "@/components/health-article";
 
 export default function Home() {
   return (
-    (<div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground">
       {/* Hero Section */}
       <section className="relative py-16 px-4 sm:px-6 lg:px-8 min-h-screen">
         <div className="max-w-7xl mx-auto">
           <div className="text-center flex flex-col items-center">
-            <div className="relative w-32 h-32 sm:w-48 sm:h-48" data-aos="zoom-y-out" data-aos-delay="100">
-            <Image
-            src="/opentag.png"
-            alt="Medical Logo"
-            className="rounded-full"
-            fill
-            sizes="100vw"
-            data-aos="zoom-y-out" data-aos-delay="150"
-            style={{
-            objectFit: "cover"
-            }} 
-            />
-            </div>
+        <div className="relative w-32 h-32 sm:w-48 sm:h-48" data-aos="zoom-y-out" data-aos-delay="100">
+        <Image
+        src="/opentag.png"
+        alt="Medical Logo"
+        className="rounded-full"
+        fill
+        sizes="100vw"
+        data-aos="zoom-y-out" data-aos-delay="150"
+        style={{
+        objectFit: "cover"
+        }} 
+        />
+        </div>
         <h1 className="text-5xl sm:text-6xl font-bold tracking-tight text-red-600 dark:text-red-500 pt-10">
           OpenTag
         </h1>
@@ -32,12 +32,15 @@ export default function Home() {
           Saving Lives, Using QR Codes
         </p>
         <div className="mt-8 flex flex-col sm:flex-row gap-4">
-          {/* <Button asChild size="lg">
-            <Link href="/register">Get Your MedTag</Link>
-          </Button>
-          <Button variant="outline" size="lg" asChild>
-            <Link href="/about">Learn More</Link>
-          </Button> */}
+          {/* Find a Tag Dialog */}
+          <div className="flex justify-center flex-1">
+            <Link
+            className="text-xl font-bold text-red-500"
+            href="/lookup"
+            >
+            Found a Tag? <span className="underline bold">Click here</span> to get its owner's medical information
+            </Link>
+        </div>
         </div>
           </div>
         </div>
@@ -81,20 +84,13 @@ export default function Home() {
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-2xl sm:text-3xl font-bold mb-4">Ready to get started?</h2>
           <p className="text-muted-foreground text-sm sm:text-base mb-8">
-            Join the future of medical identification with MedTag
+        Join the future of medical identification with MedTag
           </p>
           <Button asChild size="lg">
-            <Link href="/register">Register Now</Link>
+        <Link href="/register">Register Now</Link>
           </Button>
         </div>
       </section>
-      {/* Find a Tag Dialog */}
-      <Link
-        className="fixed p-3 rounded-xl font-bold bottom-4 right-4 sm:bottom-8 sm:right-8 bg-red-600 text-white hover:bg-red-700 dark:bg-red-500 dark:text-white"
-        href="/lookup"      
-        >
-        Tag Lookup
-      </Link>
-    </div>)
+    </div>
   );
 }

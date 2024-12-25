@@ -18,9 +18,6 @@ export function Footer() {
             <Link href="/terms" className="hover:text-gray-800">Terms of Service</Link>
           </div>
         </div>
-        <div className="mt-4 text-center text-sm text-gray-500">
-          <p>&copy; {new Date().getFullYear()} OpenTag. All rights reserved.</p>
-        </div>
       </div>
     </footer>
   );
