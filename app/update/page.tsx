@@ -1,4 +1,4 @@
-import { RegisterForm } from "@/components/auth/register-form"
+import { UpdateProfileForm } from "@/components/auth/update-form"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function RegisterPage() {
@@ -6,13 +6,13 @@ export default function RegisterPage() {
     <div className="py-10 flex justify-center items-center min-h-screen">
       <Card>
       <CardHeader>
-        <CardTitle>Register for OpenTag</CardTitle>
+        <CardTitle>Update</CardTitle>
         <CardDescription>
-        Create your account to get your digital vehicle tag
+        Update your profile
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <RegisterForm />
+        <UpdateProfileForm />
       </CardContent>
       </Card>
     </div>

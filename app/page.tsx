@@ -25,14 +25,12 @@ export default function Home() {
             }} 
             />
             </div>
-        <BlurIn
-          word="OpenTag"
-          className="text-5xl sm:text-6xl font-bold tracking-tight text-red-600 dark:text-red-500 pt-10"
-        />
-        <BlurIn
-          word="Saving Lives, Using QR Codes"
-          className="max-w-2xl mx-auto text-xl sm:text-2xl text-muted-foreground"
-        />
+        <h1 className="text-5xl sm:text-6xl font-bold tracking-tight text-red-600 dark:text-red-500 pt-10">
+          OpenTag
+        </h1>
+        <p className="max-w-2xl mx-auto text-xl sm:text-2xl text-muted-foreground mt-4 font-semibold">
+          Saving Lives, Using QR Codes
+        </p>
         <div className="mt-8 flex flex-col sm:flex-row gap-4">
           {/* <Button asChild size="lg">
             <Link href="/register">Get Your MedTag</Link>
@@ -91,11 +89,12 @@ export default function Home() {
         </div>
       </section>
       {/* Find a Tag Dialog */}
-      <Button
-        className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 bg-red-600 text-white hover:bg-red-700 dark:bg-red-500 dark:text-white"
-      >
+      <Link
+        className="fixed p-3 rounded-xl font-bold bottom-4 right-4 sm:bottom-8 sm:right-8 bg-red-600 text-white hover:bg-red-700 dark:bg-red-500 dark:text-white"
+        href="/lookup"      
+        >
         Tag Lookup
-      </Button>
+      </Link>
     </div>)
   );
 }
