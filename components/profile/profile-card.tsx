@@ -8,9 +8,11 @@ interface ProfileCardProps {
   user: {
     fullName: string;
     bloodGroup: string;
+    phoneNumber: string;
+    height: string;
+    weight: string;
     emergencyContact: string[];
-    address: string;
-    vehicleNumber: string;
+    gender: string;
     medications?: string;
     allergies?: string;
     medicalNotes?: string;
@@ -19,12 +21,9 @@ interface ProfileCardProps {
     diabetes?: boolean;
     pregnancyStatus?: boolean;
     organDonor?: boolean;
-    avatarUrl?: string;
     dateOfBirth: string;
-    height?: string;
-    weight?: string;
     emailVerified: boolean;
-    insurancePolicy?: string; // Added insurancePolicy field
+    insurancePolicy?: string;
   };
 }
 

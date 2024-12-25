@@ -117,9 +117,9 @@ export default function Home() {
             <p className="text-muted-foreground text-sm sm:text-base mb-4">
             Put it in simple terms, OpenTag is like a sticker that you can attach to your personal items. This sticker contains a QR code that, when scanned, will display your medical information.
           </p>
-          <p className="text-muted-foreground text-sm sm:text-base">
-            You may ask why you would need this. Well, imagine you are in an accident and are unable to communicate with the paramedics. They can scan the QR code on your OpenTag and get all the information they need to save your life.
-          </p>
+            <p className="text-muted-foreground text-sm sm:text-base">
+            You may ask why you would need this. Well, imagine you are unconscious and unable to communicate with the paramedics. They can scan the QR code on your OpenTag to get all the information they need to save your life and contact your family.
+            </p>
           </div>
           </div>
         </section>

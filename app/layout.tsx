@@ -4,13 +4,12 @@ import { Inter } from 'next/font/google'
 import { ThemeProvider } from "@/components/theme-provider"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
-import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'OpenTag - Digital Vehicle Identification',
-  description: 'Open-source digital identification system for vehicles',
+  title: 'OpenTag',
+  description: 'Open-source medical identification made accessible for everyone.',
 }
 
 export default function RootLayout({
@@ -29,7 +28,6 @@ export default function RootLayout({
         >
           <Navbar />
           {children}
-          <Toaster />
           <Footer />
         </ThemeProvider>
       </body>

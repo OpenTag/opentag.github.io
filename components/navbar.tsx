@@ -7,10 +7,10 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { TagIcon } from "lucide-react";
 import Image from "next/image";
 import { auth } from "@/lib/firebaseClient";
-import { signOut } from "firebase/auth";
+import { signOut, User } from "firebase/auth";
 
 export function Navbar() {
-  const [user, setUser] = useState<firebase.User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -64,7 +64,9 @@ export function Navbar() {
                   </Button>
                 </>
               )}
-              <ModeToggle className="hidden sm:inline" />
+              <div className="hidden sm:inline">
+              <ModeToggle />
+              </div>
             </div>
 
             <div className="sm:hidden">

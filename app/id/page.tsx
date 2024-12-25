@@ -10,15 +10,22 @@ import { ProfileCard } from '@/components/profile/profile-card';
 interface UserData {
   fullName: string;
   bloodGroup: string;
+  phoneNumber: string;
   emergencyContact: string[];
-  address: string;
-  vehicleNumber: string;
+  gender: string;
   medications?: string;
+  allergies?: string;
+  medicalNotes?: string;
+  asthma?: boolean;
   highBP?: boolean;
+  diabetes?: boolean;
+  pregnancyStatus?: boolean;
   organDonor?: boolean;
-  avatarUrl?: string;
-  height?: string;
-  weight?: string;
+  dateOfBirth: string;
+  height: string;
+  weight: string;
+  emailVerified: boolean;
+  insurancePolicy?: string;
 }
 
 const UserDetail: React.FC = () => {
