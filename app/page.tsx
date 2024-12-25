@@ -1,13 +1,20 @@
 import { Button } from "@/components/ui/button";
-import { Heart, UserCircle, ShieldCheck } from "lucide-react";
+import { Heart, ShieldCheck, DollarSign } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import BlurIn from "@/components/ui/blur-in";
 import {HealthArticle} from "@/components/health-article";
+import { cn } from "@/lib/utils";
+import { DotPattern } from "@/components/ui/dot-pattern";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <DotPattern
+        className={cn(
+          "[mask-image:radial-gradient(500px_circle_at_center,white,transparent)]",
+        )}
+      />
       {/* Hero Section */}
       <section className="relative py-16 px-4 sm:px-6 lg:px-8 min-h-screen">
         <div className="max-w-7xl mx-auto">
@@ -52,42 +59,68 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-12 sm:py-16 bg-muted/50 dark:bg-muted/20">
+      <section className="">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="flex flex-col items-center text-center p-6">
           <Heart className="h-12 w-12 text-red-600 dark:text-red-500 mb-4" />
           <h3 className="text-lg sm:text-xl font-semibold mb-2">Open Source</h3>
           <p className="text-muted-foreground text-sm sm:text-base">
-        Built with open source technologies, ensuring transparency and security
+            Built with open source technologies, ensuring transparency and security
           </p>
         </div>
         <div className="flex flex-col items-center text-center p-6">
-          <UserCircle className="h-12 w-12 text-red-600 dark:text-red-500 mb-4" />
-          <h3 className="text-lg sm:text-xl font-semibold mb-2">Community Built</h3>
+          <DollarSign className="h-12 w-12 text-red-600 dark:text-red-500 mb-4" />
+          <h3 className="text-lg sm:text-xl font-semibold mb-2">Free Forever</h3>
           <p className="text-muted-foreground text-sm sm:text-base">
-        Developed and maintained by a passionate community of contributors
+            No hidden costs or star marks, ever. Free and accessible for everyone, forever.
           </p>
         </div>
         <div className="flex flex-col items-center text-center p-6">
           <ShieldCheck className="h-12 w-12 text-red-600 dark:text-red-500 mb-4" />
           <h3 className="text-lg sm:text-xl font-semibold mb-2">Secure</h3>
           <p className="text-muted-foreground text-sm sm:text-base">
-        Your data is protected with industry-leading security measures
+            Your data is protected with industry-leading security measures
           </p>
         </div>
           </div>
         </div>
       </section>
+
+        <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto items-center">
+            <div className="max-w-3xl mx-auto text-center">
+              <h2 className="text-3xl sm:text-3xl font-bold mb-4">What is OpenTag?</h2>
+            </div>
+            <div className="relative w-full h-48 sm:h-64">
+              <Image
+                src="/sampletag.png"
+                alt="OpenTag Example"
+                className="rounded-lg object-contain py-4"
+                fill
+                sizes="100vw"
+              />
+            </div>
+            <div className="max-w-4xl mx-auto mt-8">
+            <p className="text-muted-foreground text-sm sm:text-base mb-4">
+            Put it in simple terms, OpenTag is like a sticker that you can attach to your personal items. This sticker contains a QR code that, when scanned, will display your medical information.
+          </p>
+          <p className="text-muted-foreground text-sm sm:text-base">
+            You may ask why you would need this. Well, imagine you are in an accident and are unable to communicate with the paramedics. They can scan the QR code on your OpenTag and get all the information they need to save your life.
+          </p>
+          </div>
+          </div>
+        </section>
+
       {/* CTA Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-2xl sm:text-3xl font-bold mb-4">Ready to get started?</h2>
           <p className="text-muted-foreground text-sm sm:text-base mb-8">
-        Join the future of medical identification with MedTag
+        Get your OpenTag today and start protecting yourself and your loved ones from medical emergencies
           </p>
-          <Button asChild size="lg">
-        <Link href="/register">Register Now</Link>
+          <Button asChild size="lg" variant="red">
+        <Link href="/register">Get Tag</Link>
           </Button>
         </div>
       </section>

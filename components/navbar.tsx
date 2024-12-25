@@ -30,7 +30,7 @@ export function Navbar() {
   };
 
   return (
-    <nav className="border-b">
+    <nav className="">
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center">
