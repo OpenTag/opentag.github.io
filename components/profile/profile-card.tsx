@@ -74,20 +74,22 @@ export function ProfileCard({ user }: ProfileCardProps) {
       </CardHeader>
       <CardContent className="space-y-6">
         <div>
-          <span className="text-xl font-semibold">Emergency Contacts</span>
-          <ul className="list-disc list-inside">
-            {user.emergencyContact.map((contact, index) => (
+            {user.emergencyContact[0] && (
+            <span className="text-xl font-semibold">Emergency Contacts</span>
+            )}
+            <ul className="list-disc list-inside">
+            {user.emergencyContact.filter(contact => contact !== "").map((contact, index) => (
               <li key={index} className="flex items-center gap-2 my-2">
-                <span>{contact}</span>
-                <button
-                  className="bg-red-500 text-white px-3 py-2 rounded ml-2 flex items-center gap-1"
-                  onClick={() => window.location.href = `tel:${contact}`}
-                >
-                  <Phone className="h-5 w-5" />
-                </button>
+              <span>{contact}</span>
+              <button
+                className="bg-red-500 text-white px-3 py-2 rounded ml-2 flex items-center gap-1"
+                onClick={() => window.location.href = `tel:${contact}`}
+              >
+                <Phone className="h-5 w-5" />
+              </button>
               </li>
             ))}
-          </ul>
+            </ul>
         </div>
         {user.medications && (
           <div className="flex items-center gap-2">

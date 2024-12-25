@@ -14,8 +14,8 @@ interface DotPatternProps {
   [key: string]: any;
 }
 export function DotPattern({
-  width = 16,
-  height = 16,
+  width = 25,
+  height = 25,
   x = 0,
   y = 0,
   cx = 1,
