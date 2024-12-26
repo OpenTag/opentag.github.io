@@ -38,16 +38,27 @@ export function Navbar() {
               <Image src="/opentag.png" alt="OpenTag" width={40} height={40} className="mr-2" />
               <span className="font-bold text-xl hidden sm:inline">OpenTag</span>
             </Link>
+            <div className="sm:hidden">
+              {user ? (
+              <Button variant="ghost" asChild>
+                <Link href="/dashboard">Dashboard</Link>
+              </Button>
+              ) : (
+              <Button variant="ghost" asChild>
+                <Link href="/register">Get Tag</Link>
+              </Button>
+              )}
+            </div>
           </div>
 
           <div className="flex items-center gap-4">
             <div className="hidden sm:flex items-center gap-4">
               {user ? (
                 <>
-                  <Button variant="primary" asChild>
+                  <Button variant="ghost" asChild>
                     <Link href="/about">About</Link>
                   </Button>
-                  <Button variant="primary" asChild>
+                  <Button variant="ghost" asChild>
                     <Link href="/dashboard">Dashboard</Link>
                   </Button>
                   <Button variant="red" onClick={handleLogout}>
@@ -65,14 +76,15 @@ export function Navbar() {
                 </>
               )}
               <div className="hidden sm:inline">
-              <ModeToggle />
+                <ModeToggle />
               </div>
             </div>
 
-            <div className="sm:hidden">
+            <div className="sm:hidden flex items-center gap-4">
+              <ModeToggle />
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                className="inline-flex items-center justify-center p-2 rounded-md text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
               >
                 <span className="sr-only">Open main menu</span>
                 {menuOpen ? (
@@ -95,27 +107,27 @@ export function Navbar() {
           <div className="px-2 pt-2 pb-3 space-y-1">
             {user ? (
               <>
-                <Link href="/about" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-700 hover:text-white">
-                  About
-                </Link>
-                <Link href="/dashboard" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-700 hover:text-white">
-                  Dashboard
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-700 hover:text-white"
-                >
-                  Logout
-                </button>
+          <Link href="/about" className="block px-3 py-2 rounded-md text-base font-medium text-black dark:text-white hover:bg-stone-700 hover:text-white">
+            About
+          </Link>
+          <Link href="/dashboard" className="block px-3 py-2 rounded-md text-base font-medium text-black dark:text-white hover:bg-stone-700 hover:text-white">
+            Dashboard
+          </Link>
+          <button
+            onClick={handleLogout}
+            className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-black dark:text-white hover:bg-stone-700 hover:text-white"
+          >
+            Logout
+          </button>
               </>
             ) : (
               <>
-                <Link href="/login" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-700 hover:text-white">
-                  Login
-                </Link>
-                <Link href="/register" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-700 hover:text-white">
-                  Get Tag
-                </Link>
+          <Link href="/login" className="block px-3 py-2 rounded-md text-base font-medium text-black dark:text-white hover:bg-stone-700 hover:text-white">
+            Login
+          </Link>
+          <Link href="/register" className="block px-3 py-2 rounded-md text-base font-medium text-black dark:text-white hover:bg-stone-700 hover:text-white">
+            Get Tag
+          </Link>
               </>
             )}
           </div>

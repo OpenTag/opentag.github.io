@@ -130,14 +130,14 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-stone-500"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-red-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-stone-100 dark:bg-black py-6">
-      <div className="max-w-4xl mx-auto bg-white dark:bg-stone-800 shadow-md rounded-lg p-6">
+    <div className="min-h-screen bg-white dark:bg-black my-16 p-6">
+      <div className="max-w-4xl mx-auto bg-stone-100 dark:bg-stone-800 rounded-lg p-6">
       <h1 className="text-2xl font-bold text-stone-800 dark:text-stone-200">
       Welcome, <span className="text-red-500">{userName || 'User'}</span>
       </h1>

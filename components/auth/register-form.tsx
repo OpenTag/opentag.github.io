@@ -101,7 +101,7 @@ export function RegisterForm() {
       });
 
       setErrorMessage("Registration successful! Please check your email to verify your account.");
-      window.location.href = "/";
+      window.location.href = "/dashboard";
     } catch (error) {
       if (error instanceof FirebaseError) {
         console.error("Firebase Error Code:", error.code, error.message);

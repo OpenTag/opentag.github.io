@@ -76,16 +76,8 @@ const UserDetail: React.FC = () => {
   }
 
   return (
-    <div className="py-10 px-2 flex justify-center items-center min-h-screen">
-      <Card>
-        <CardHeader>
-          <CardTitle>User Details</CardTitle>
-          <CardDescription>Details of the user with ID: {id}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ProfileCard user={userData} />
-        </CardContent>
-      </Card>
+    <div className="py-10 px-2 justify-center items-center min-h-screen">
+      <ProfileCard user={userData} />
     </div>
   );
 };

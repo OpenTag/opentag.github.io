@@ -42,7 +42,7 @@ export function ProfileCard({ user }: ProfileCardProps) {
   const age = calculateAge(user.dateOfBirth);
 
   return (
-    <Card className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
+    <Card className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 bg-white dark:bg-stone-800">
       <CardHeader className="flex flex-col sm:flex-row items-center gap-4">
         <div className="flex items-center gap-4">
           <div>
