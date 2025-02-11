@@ -1,0 +1,260 @@
+"use client"
+
+import { useState } from "react"
+import { useSearchParams } from "next/navigation"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Phone } from "lucide-react"
+
+const allergiesList = ["Pollen", "Dust", "Pet Dander", "Peanuts", "Shellfish"]
+const medicationsList = ["Aspirin", "Ibuprofen", "Penicillin", "Insulin", "Metformin"]
+const medicalConditionsList = ["Asthma", "Diabetes", "Hypertension", "Arthritis", "Migraine"]
+
+const bloodGroupMap: { [key: number]: string } = {
+  0: "A+",
+  1: "A-",
+  2: "B+",
+  3: "B-",
+  4: "O+",
+  5: "O-",
+  6: "AB+",
+  7: "AB-",
+}
+
+const substanceUseMap: { [key: number]: string } = {
+  0: "None",
+  1: "Alcohol Only",
+  2: "Tobacco Only",
+  3: "Both Alcohol and Tobacco",
+}
+
+function base62ToDecimal(base62Str: string): bigint {
+  const base62Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+  let result = BigInt(0)
+  for (let i = 0; i < base62Str.length; i++) {
+    result = result * BigInt(62) + BigInt(base62Chars.indexOf(base62Str[i]))
+  }
+  return result
+}
+
+function base62ToBinary(base62Str: string): string {
+  const decimal = base62ToDecimal(base62Str)
+  return decimal.toString(2).padStart(17, "0")
+}
+
+interface DecodedData {
+  name: string
+  dob: string
+  age: number
+  height: string
+  weight: string
+  bloodGroup: string
+  emergencyContact: string
+  substanceUse: string
+  pregnant: boolean
+  organDonor: boolean
+  allergies: string[]
+  medications: string[]
+  medicalConditions: string[]
+}
+
+const DataDisplayPage = () => {
+  const searchParams = useSearchParams()
+  const [pin, setPin] = useState("")
+  const [decodedData, setDecodedData] = useState<DecodedData | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  const decryptData = (encryptedData: string, pin: string): string => {
+    const decoded = atob(encryptedData)
+    let decrypted = ""
+    for (let i = 0; i < decoded.length; i++) {
+      decrypted += String.fromCharCode(decoded.charCodeAt(i) ^ pin.charCodeAt(i % pin.length))
+    }
+    return decrypted
+  }
+
+  const decodeData = (data: string): DecodedData => {
+    const [numericPart, binaryPart, name, contact] = data.split("-")
+
+    const numericDecimal = base62ToDecimal(numericPart).toString().padStart(16, "0")
+    const binaryString = base62ToBinary(binaryPart)
+
+    const dob = numericDecimal.slice(0, 8)
+    if (dob[0] !== '1' && dob[0] !== '2') {
+      throw new Error("Incorrect PIN")
+    }
+    const height = numericDecimal.slice(8, 11)
+    const weight = numericDecimal.slice(11, 14)
+    const bloodGroup = bloodGroupMap[Number.parseInt(numericDecimal[14])]
+    const substanceUse = substanceUseMap[Number.parseInt(numericDecimal[15])]
+
+    const emergencyContact = base62ToDecimal(contact).toString()
+
+    const pregnant = binaryString[0] === "1"
+    const organDonor = binaryString[1] === "1"
+    const allergies = allergiesList.filter((_, i) => binaryString[i + 2] === "1")
+    const medications = medicationsList.filter((_, i) => binaryString[i + 7] === "1")
+    const medicalConditions = medicalConditionsList.filter((_, i) => binaryString[i + 12] === "1")
+
+    const calculateAge = (dob: string): number => {
+      const birthDate = new Date(`${dob.slice(0, 4)}-${dob.slice(4, 6)}-${dob.slice(6, 8)}`)
+      const ageDifMs = Date.now() - birthDate.getTime()
+      const ageDate = new Date(ageDifMs)
+      return Math.abs(ageDate.getUTCFullYear() - 1970)
+    }
+
+    return {
+      name,
+      dob: `${dob.slice(0, 4)}-${dob.slice(4, 6)}-${dob.slice(6, 8)}`,
+      age: calculateAge(dob),
+      height,
+      weight,
+      bloodGroup,
+      emergencyContact,
+      substanceUse,
+      pregnant,
+      organDonor,
+      allergies,
+      medications,
+      medicalConditions,
+    }
+  }
+
+  const handleDecrypt = () => {
+    const encryptedData = searchParams.get("")
+    if (!encryptedData) {
+      setError("OpenTag might me damaged")
+      return
+    }
+
+    try {
+      const decryptedData = decryptData(encryptedData, pin)
+      const decoded = decodeData(decryptedData)
+      setDecodedData(decoded)
+      setError(null)
+    } catch (err) {
+      setError("Incorrect PIN")
+    }
+  }
+  return (
+    <div className="flex items-center justify-center min-h-screen p-4 sm:p-8">
+      <div className="w-full max-w-2xl">
+        <h1 className="font-bold text-3xl text-center mb-8">
+          OpenTag <span className="text-red-500 italic">Serverless</span>
+        </h1>
+        {!decodedData && (
+          <div className="bg-white shadow-md rounded-lg p-6">
+            <h2 className="text-xl font-semibold mb-4">Enter PIN</h2>
+            <div className="space-y-4">
+              <Input
+                type="password"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                placeholder="Enter 4-digit PIN"
+                value={pin}
+                onChange={(e) => setPin(e.target.value)}
+                maxLength={4}
+              />
+              <Button onClick={handleDecrypt} className="w-full">
+                Decrypt Data
+              </Button>
+              {error && <p className="text-red-500">{error}</p>}
+            </div>
+          </div>
+        )}
+        {decodedData && (
+          <div className="bg-white shadow-md rounded-lg p-6">
+            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4">
+              {decodedData.name} - <span className="text-4xl font-bold text-red-500">{decodedData.bloodGroup}</span>
+            </h2>
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-2xl font-semibold">Personal Details</h3>
+                <div className="mt-2">
+                  <span>Date of Birth: {decodedData.dob}</span>
+                </div>
+                <div className="mt-2">
+                  <span>Age: {decodedData.age} years</span>
+                </div>
+                <div className="mt-2">
+                  <span>Height: {parseInt(decodedData.height)} cm ({(parseFloat(decodedData.height) / 2.54).toFixed(2)} inches)</span>
+                </div>
+                <div className="mt-2">
+                  <span>Weight: {parseInt(decodedData.weight)} kg ({(parseFloat(decodedData.weight) * 2.20462).toFixed(2)} lbs)</span>
+                </div>
+              </div>
+              <div>
+                <span className="text-xl font-semibold">Emergency Contact</span>
+                <ul className="list-disc list-inside">
+                  <li className="flex items-center gap-2 my-2">
+                    <span>{decodedData.emergencyContact}</span>
+                    <button
+                      className="bg-red-500 text-white px-3 py-2 rounded ml-2 flex items-center gap-1"
+                      onClick={() => window.location.href = `tel:${decodedData.emergencyContact}`}
+                    >
+                      <Phone className="h-5 w-5" />
+                    </button>
+                  </li>
+                </ul>
+              </div>
+                  <div>
+                  <span className="text-xl font-semibold">Substance Use</span>
+                  <div className="mt-2">
+                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">{decodedData.substanceUse}</span>
+                  </div>
+                  </div>
+                <div>
+                  <span className="text-xl font-semibold">Pregnant</span>
+                  <div className="mt-2">
+                  <span className={`px-2 py-1 rounded-full ${decodedData.pregnant ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                    {decodedData.pregnant ? "Yes" : "No"}
+                  </span>
+                  </div>
+                </div>
+                <div>
+                  <span className="text-xl font-semibold">Organ Donor</span>
+                  <div className="mt-2">
+                  <span className={`px-2 py-1 rounded-full ${decodedData.organDonor ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                    {decodedData.organDonor ? "Yes" : "No"}
+                  </span>
+                  </div>
+                </div>
+                {decodedData.allergies.length > 0 && (
+                  <div>
+                  <span className="text-xl font-semibold">Allergies</span>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {decodedData.allergies.map((allergy, index) => (
+                    <span key={index} className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">{allergy}</span>
+                    ))}
+                  </div>
+                  </div>
+                )}
+                {decodedData.medications.length > 0 && (
+                  <div>
+                  <span className="text-xl font-semibold">Medications</span>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {decodedData.medications.map((medication, index) => (
+                    <span key={index} className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full">{medication}</span>
+                    ))}
+                  </div>
+                  </div>
+                )}
+                {decodedData.medicalConditions.length > 0 && (
+                  <div>
+                  <span className="text-xl font-semibold">Medical Conditions</span>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {decodedData.medicalConditions.map((condition, index) => (
+                    <span key={index} className="bg-red-100 text-red-800 px-2 py-1 rounded-full">{condition}</span>
+                    ))}
+                  </div>
+                  </div>
+                )}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export default DataDisplayPage
