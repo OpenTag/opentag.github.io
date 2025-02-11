@@ -137,14 +137,14 @@ const DataDisplayPage = () => {
     }
   }
   return (
-    <div className="flex items-center justify-center min-h-screen p-4 sm:p-8">
+    <div className="flex items-center justify-center min-h-screen p-4 sm:p-8 dark:bg-black">
       <div className="w-full max-w-2xl">
-        <h1 className="font-bold text-3xl text-center mb-8">
+        <h1 className="font-bold text-3xl text-center mb-8 dark:text-white">
           OpenTag <span className="text-red-500 italic">Serverless</span>
         </h1>
         {!decodedData && (
-          <div className="bg-white shadow-md rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-4">Enter PIN</h2>
+          <div className="bg-white shadow-md rounded-lg p-6 dark:bg-stone-800">
+            <h2 className="text-xl font-semibold mb-4 dark:text-white">Enter PIN</h2>
             <div className="space-y-4">
               <Input
                 type="password"
@@ -156,36 +156,36 @@ const DataDisplayPage = () => {
                 maxLength={4}
               />
               <Button onClick={handleDecrypt} className="w-full">
-                Decrypt Data
+                Verify PIN
               </Button>
-              {error && <p className="text-red-500">{error}</p>}
+              {error && <p className="text-red-500 dark:text-red-400">{error}</p>}
             </div>
           </div>
         )}
         {decodedData && (
-          <div className="bg-white shadow-md rounded-lg p-6">
-            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4">
+          <div className="bg-white shadow-md rounded-lg p-6 dark:bg-stone-800">
+            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4 dark:text-white">
               {decodedData.name} - <span className="text-4xl font-bold text-red-500">{decodedData.bloodGroup}</span>
             </h2>
             <div className="space-y-4">
               <div>
-                <h3 className="text-2xl font-semibold">Personal Details</h3>
-                <div className="mt-2">
+                <h3 className="text-2xl font-semibold dark:text-white">Personal Details</h3>
+                <div className="mt-2 dark:text-stone-300">
                   <span>Date of Birth: {decodedData.dob}</span>
                 </div>
-                <div className="mt-2">
+                <div className="mt-2 dark:text-stone-300">
                   <span>Age: {decodedData.age} years</span>
                 </div>
-                <div className="mt-2">
+                <div className="mt-2 dark:text-stone-300">
                   <span>Height: {parseInt(decodedData.height)} cm ({(parseFloat(decodedData.height) / 2.54).toFixed(2)} inches)</span>
                 </div>
-                <div className="mt-2">
+                <div className="mt-2 dark:text-stone-300">
                   <span>Weight: {parseInt(decodedData.weight)} kg ({(parseFloat(decodedData.weight) * 2.20462).toFixed(2)} lbs)</span>
                 </div>
               </div>
               <div>
-                <span className="text-xl font-semibold">Emergency Contact</span>
-                <ul className="list-disc list-inside">
+                <span className="text-xl font-semibold dark:text-white">Emergency Contact</span>
+                <ul className="list-disc list-inside dark:text-stone-300">
                   <li className="flex items-center gap-2 my-2">
                     <span>{decodedData.emergencyContact}</span>
                     <button
@@ -198,53 +198,53 @@ const DataDisplayPage = () => {
                 </ul>
               </div>
                   <div>
-                  <span className="text-xl font-semibold">Substance Use</span>
+                  <span className="text-xl font-semibold dark:text-white">Substance Use</span>
                   <div className="mt-2">
-                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">{decodedData.substanceUse}</span>
+                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full dark:bg-blue-900 dark:text-blue-200">{decodedData.substanceUse}</span>
                   </div>
                   </div>
                 <div>
-                  <span className="text-xl font-semibold">Pregnant</span>
+                  <span className="text-xl font-semibold dark:text-white">Pregnant</span>
                   <div className="mt-2">
-                  <span className={`px-2 py-1 rounded-full ${decodedData.pregnant ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                  <span className={`px-2 py-1 rounded-full ${decodedData.pregnant ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"}`}>
                     {decodedData.pregnant ? "Yes" : "No"}
                   </span>
                   </div>
                 </div>
                 <div>
-                  <span className="text-xl font-semibold">Organ Donor</span>
+                  <span className="text-xl font-semibold dark:text-white">Organ Donor</span>
                   <div className="mt-2">
-                  <span className={`px-2 py-1 rounded-full ${decodedData.organDonor ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                  <span className={`px-2 py-1 rounded-full ${decodedData.organDonor ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"}`}>
                     {decodedData.organDonor ? "Yes" : "No"}
                   </span>
                   </div>
                 </div>
                 {decodedData.allergies.length > 0 && (
                   <div>
-                  <span className="text-xl font-semibold">Allergies</span>
+                  <span className="text-xl font-semibold dark:text-white">Allergies</span>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {decodedData.allergies.map((allergy, index) => (
-                    <span key={index} className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">{allergy}</span>
+                    <span key={index} className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full dark:bg-yellow-900 dark:text-yellow-200">{allergy}</span>
                     ))}
                   </div>
                   </div>
                 )}
                 {decodedData.medications.length > 0 && (
                   <div>
-                  <span className="text-xl font-semibold">Medications</span>
+                  <span className="text-xl font-semibold dark:text-white">Medications</span>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {decodedData.medications.map((medication, index) => (
-                    <span key={index} className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full">{medication}</span>
+                    <span key={index} className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full dark:bg-purple-900 dark:text-purple-200">{medication}</span>
                     ))}
                   </div>
                   </div>
                 )}
                 {decodedData.medicalConditions.length > 0 && (
                   <div>
-                  <span className="text-xl font-semibold">Medical Conditions</span>
+                  <span className="text-xl font-semibold dark:text-white">Medical Conditions</span>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {decodedData.medicalConditions.map((condition, index) => (
-                    <span key={index} className="bg-red-100 text-red-800 px-2 py-1 rounded-full">{condition}</span>
+                    <span key={index} className="bg-red-100 text-red-800 px-2 py-1 rounded-full dark:bg-red-900 dark:text-red-200">{condition}</span>
                     ))}
                   </div>
                   </div>
