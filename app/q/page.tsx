@@ -92,10 +92,14 @@ const DataDisplayPage = () => {
 
     const pregnant = binaryString[0] === "1"
     const organDonor = binaryString[1] === "1"
-    const allergies = allergiesList.filter((_, i) => binaryString[i + 2] === "1")
-    const medications = medicationsList.filter((_, i) => binaryString[i + 7] === "1")
-    const medicalConditions = medicalConditionsList.filter((_, i) => binaryString[i + 12] === "1")
-
+    let allergies = allergiesList.filter((_, i) => binaryString[i + 2] === "1")
+    let medications = medicationsList.filter((_, i) => binaryString[i + 7] === "1")
+    let medicalConditions = medicalConditionsList.filter((_, i) => binaryString[i + 12] === "1")
+    if (binaryPart==="0"){
+      allergies = []
+      medications = []
+      medicalConditions = []
+    }
     const calculateAge = (dob: string): number => {
       const birthDate = new Date(`${dob.slice(0, 4)}-${dob.slice(4, 6)}-${dob.slice(6, 8)}`)
       const ageDifMs = Date.now() - birthDate.getTime()
