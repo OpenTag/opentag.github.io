@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Phone } from "lucide-react"
+import Image from "next/image"
 
 const allergiesList = ["Pollen", "Dust", "Pet Dander", "Peanuts", "Shellfish"]
 const medicationsList = ["Aspirin", "Ibuprofen", "Penicillin", "Insulin", "Metformin"]
@@ -60,6 +61,7 @@ interface DecodedData {
 
 const DataDisplayPage = () => {
   const searchParams = useSearchParams()
+  const [showModal, setShowModal] = useState(false)
   const [pin, setPin] = useState("")
   const [decodedData, setDecodedData] = useState<DecodedData | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -141,30 +143,57 @@ const DataDisplayPage = () => {
     }
   }
   return (
-    <div className="flex items-center justify-center min-h-screen p-4 sm:p-8 dark:bg-black">
-      <div className="w-full max-w-2xl">
+    <div className="min-h-screen flex flex-col items-center justify-center md:my-auto p-4 sm:p-8 dark:bg-black">
+      <div className="w-full max-w-2xl flex-grow"> 
         <h1 className="font-bold text-3xl text-center mb-8 dark:text-white">
-          OpenTag <span className="text-red-500 italic">Serverless</span>
+          OpenTag <span className="text-red-500 dark:text-red-600 italic">Serverless</span>
         </h1>
         {!decodedData && (
-          <div className="bg-white shadow-md rounded-lg p-6 dark:bg-stone-800">
-            <h2 className="text-xl font-semibold mb-4 dark:text-white">Enter PIN</h2>
-            <div className="space-y-4">
-              <Input
-                type="password"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                placeholder="Enter 4-digit PIN"
-                value={pin}
-                onChange={(e) => setPin(e.target.value)}
-                maxLength={4}
-              />
-              <Button onClick={handleDecrypt} className="w-full">
-                Verify PIN
-              </Button>
-              {error && <p className="text-red-500 dark:text-red-400">{error}</p>}
+          <>
+            {showModal && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="bg-white p-4 m-4 rounded-lg shadow-lg max-w-md w-full dark:bg-black dark:text-white">
+                  <div className="flex justify-end">
+                    <button
+                      className="text-red-500"
+                      onClick={() => setShowModal(false)}
+                    >
+                      Close
+                    </button>
+                  </div>
+                  <div className="flex justify-center">
+                    <Image src="/instructions.png" alt="OpenTag Instructions" width={400} height={400} />
+                  </div>
+                </div>
+              </div>
+            )}
+            <div className="bg-white shadow-md rounded-lg p-6 dark:bg-stone-800">
+              <h2 className="text-xl font-semibold mb-4 dark:text-white">Enter PIN</h2>
+              <div className="space-y-4">
+                <Input
+                  type="password"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  placeholder="Enter 4-digit PIN"
+                  value={pin}
+                  onChange={(e) => setPin(e.target.value)}
+                  maxLength={4}
+                />
+                <Button onClick={handleDecrypt} className="w-full">
+                  Verify PIN
+                </Button>
+                {error && <p className="text-red-500 dark:text-red-600">{error}</p>}
+              </div>
             </div>
-          </div>
+            <div className="flex justify-center mt-4">
+              <button
+                className="text-red-500 underline"
+                onClick={() => setShowModal(true)}
+              >
+                Can't find pin? Click here
+              </button>
+            </div>
+          </>
         )}
         {decodedData && (
           <div className="bg-white shadow-md rounded-lg p-6 dark:bg-stone-800">
