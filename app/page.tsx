@@ -76,7 +76,7 @@ export default function Home() {
     if (type === 'online') {
       window.location.href = '/register';
     } else if (type === 'serverless') {
-      window.location.href = '/serverless-tag';
+      window.location.href = '/serverless';
     }
   };
 
