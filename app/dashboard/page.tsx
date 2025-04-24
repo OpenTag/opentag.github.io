@@ -8,6 +8,15 @@ import { onAuthStateChanged, User, EmailAuthProvider, reauthenticateWithCredenti
 import { doc, getDoc, getFirestore, deleteDoc } from 'firebase/firestore';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import QRCode from 'qrcode';
+import { decryptData } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { PageWrapper } from '@/components/ui/page-wrapper';
+import { PinInputDialog } from '@/components/ui/pin-input-dialog';
+import { DeleteAccountDialog } from '@/components/ui/delete-account-dialog';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const Dashboard = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -15,6 +24,11 @@ const Dashboard = () => {
   const [bloodGroup, setBloodGroup] = useState<string>('');
   const [tagID, setTagID] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [pinDialogOpen, setPinDialogOpen] = useState(false);
+  const [pinError, setPinError] = useState<string | null>(null);
+  const [verifyingPin, setVerifyingPin] = useState(false);
+  const [rawData, setRawData] = useState<any>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -37,6 +51,7 @@ const Dashboard = () => {
 
           if (userDoc.exists()) {
             const userData = userDoc.data();
+            setRawData(userData);
             setUserName(userData.fullName);
             setBloodGroup(userData.bloodGroup);
           } else {
@@ -54,7 +69,51 @@ const Dashboard = () => {
     return () => unsubscribe();
   }, [router]);
 
-  const handlePrintTag = async () => {
+  const handleInitiateTagDownload = () => {
+    if (!tagID || !rawData) return;
+    
+    // If data is encrypted, ask for PIN before generating the tag
+    if (rawData.isEncrypted && rawData.encryptedData) {
+      setPinDialogOpen(true);
+      setPinError(null);
+    } else {
+      // Legacy unencrypted data, generate tag directly
+      handlePrintTag(null);
+    }
+  };
+
+  const handleVerifyPin = async (pin: string) => {
+    if (!pin || pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+      setPinError('Please enter a valid 4-digit PIN');
+      return;
+    }
+
+    setVerifyingPin(true);
+    setPinError(null);
+
+    try {
+      // Try to decrypt the data with the provided PIN
+      const decryptedDataStr = await decryptData(rawData.encryptedData, pin);
+      
+      try {
+        // If we can parse the JSON, the PIN is correct
+        JSON.parse(decryptedDataStr);
+        
+        // PIN verified, proceed with tag generation
+        handlePrintTag(pin);
+        setPinDialogOpen(false);
+      } catch (e) {
+        setPinError('Incorrect PIN. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error verifying PIN:', error);
+      setPinError('Incorrect PIN. Please try again.');
+    } finally {
+      setVerifyingPin(false);
+    }
+  };
+
+  const handlePrintTag = async (verifiedPin: string | null) => {
     if (!tagID) return;
 
     const existingPdfBytes = await fetch('/template.pdf').then(res => res.arrayBuffer());
@@ -66,8 +125,8 @@ const Dashboard = () => {
     const qrCodeOptions = {
       margin: 0,
       color: {
-      dark: '#FFFFFF', // Red color
-      light: '#ff3131', // White background
+        dark: '#FFFFFF', // Red color
+        light: '#ff3131', // White background
       },
     };
 
@@ -97,6 +156,17 @@ const Dashboard = () => {
       color: rgb(1, 1, 1),
     });
 
+    // Add PIN to the PDF tag if verified
+    if (verifiedPin) {
+      firstPage.drawText(`PIN: ${verifiedPin}`, {
+        x: 150,
+        y: 87,
+        size: 14,
+        font: await pdfDoc.embedFont(StandardFonts.HelveticaBold),
+        color: rgb(1, 1, 1),
+      });
+    }
+
     const pdfBytes = await pdfDoc.save();
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
@@ -124,93 +194,132 @@ const Dashboard = () => {
       router.push('/login');
     } catch (error) {
       console.error('Error deleting account:', error);
+      throw error; // Re-throw to be caught by the dialog
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-red-500"></div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-white dark:bg-black my-16 p-6">
-      <div className="max-w-4xl mx-auto bg-stone-100 dark:bg-stone-800 rounded-lg p-6">
-      <h1 className="text-2xl font-bold text-stone-800 dark:text-stone-200">
-      Welcome, <span className="text-red-500">{userName || 'User'}</span>
-      </h1>
-      <p className="mt-2 text-stone-600 dark:text-stone-400">
-      <strong>Tag ID:</strong> {tagID || 'N/A'}
-      </p>
+    <PageWrapper isLoading={loading}>
+      <div className="max-w-4xl mx-auto">
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex flex-col sm:flex-row sm:items-center justify-between">
+              <span>
+                Welcome, <span className="text-red-500">{userName || 'User'}</span>
+              </span>
+              {tagID && (
+                <span className="text-sm font-normal mt-2 sm:mt-0">
+                  Tag ID: <span className="font-mono">{tagID}</span>
+                </span>
+              )}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {tagID && (
+                <>
+                  <Button
+                    onClick={handleInitiateTagDownload}
+                    className="w-full"
+                  >
+                    Download / Print QR Tag
+                  </Button>
+                  <Button
+                    variant="outline"
+                    asChild
+                    className="w-full"
+                  >
+                    <Link href={`/id?id=${tagID}`}>View Profile</Link>
+                  </Button>
+                </>
+              )}
+              <Button
+                variant="outline"
+                asChild
+                className="w-full"
+              >
+                <Link href="/update">Modify Data</Link>
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => setDeleteDialogOpen(true)}
+                className="w-full"
+              >
+                Delete Account
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
-      {tagID && (
-      <>
-        <button
-        onClick={handlePrintTag}
-        className="bg-black text-white py-2 px-4 rounded shadow hover:bg-stone-800 dark:hover:bg-stone-700 transition w-full"
-        >
-        Download / Print QR Tag <span className="text-sm text-[#bbbbbb]">PDF</span>
-        </button>
-        <Link href={`/id?id=${tagID}`} passHref>
-        <button className="bg-black text-white py-2 px-4 rounded shadow hover:bg-stone-800 dark:hover:bg-stone-700 transition w-full">
-        View Profile
-        </button>
-        </Link>
-      </>
-      )}
-      <Link href="/update" passHref>
-      <button className="bg-black text-white py-2 px-4 rounded shadow hover:bg-stone-800 dark:hover:bg-stone-700 transition w-full">
-        Modify Data
-      </button>
-      </Link>
-      <button
-      onClick={() => {
-        const password = prompt('Please enter your password to confirm account deletion:');
-        if (password) {
-        handleDeleteAccount(password);
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Safety Tips & QR Code Usage</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="list-disc list-inside space-y-2">
+              <li>Place your QR code tag on your helmet, vehicle, or ID card for easy access.</li>
+              <li>Ensure the QR code is not obstructed by scratches or dirt for proper scanning.</li>
+              <li>Share your tag ID with trusted contacts for emergencies.</li>
+              <li>Do not share sensitive personal details through the QR code.</li>
+            </ul>
+          </CardContent>
+        </Card>
+
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Where to Use OpenTag</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="list-disc list-inside space-y-2">
+              <li>Stick the QR code tag on your backpack, helmet, car, or any personal item.</li>
+              <li>Print six tags on a sheet, cut them out, and stick them using tape.</li>
+              <li>Ensure the tags are placed in visible and easily accessible locations.</li>
+              <li>Replace the tags if they get damaged or worn out.</li>
+            </ul>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Get Creative with Your QR Codes</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4">
+              Feel free to customize your QR codes to match your style! You can use different colors, add logos, or even create unique designs. Just make sure the QR code remains scannable.
+            </p>
+            <ul className="list-disc list-inside space-y-2">
+              <li>Use high-contrast colors for the QR code and background.</li>
+              <li>Experiment with different shapes and patterns, but keep the core structure intact.</li>
+              <li>Test your custom QR codes with multiple devices to ensure they work properly.</li>
+            </ul>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* PIN Verification Dialog */}
+      <PinInputDialog
+        isOpen={pinDialogOpen}
+        onClose={() => setPinDialogOpen(false)}
+        onVerify={handleVerifyPin}
+        title="Enter your PIN to download tag"
+        description="Your medical data is protected with a PIN. Please enter your 4-digit PIN to include it in your tag."
+        isVerifying={verifyingPin}
+        error={pinError}
+        basicInfo={
+          <div className="space-y-2">
+            <p><strong>Name:</strong> {userName}</p>
+            <p><strong>Blood Group:</strong> {bloodGroup}</p>
+          </div>
         }
-      }}
-      className="bg-black text-white py-2 px-4 rounded shadow hover:bg-stone-800 dark:hover:bg-stone-700 transition w-full"
-      >
-      Delete Account
-      </button>
-      </div>
+      />
 
-      <div className="mt-10">
-      <h2 className="text-xl font-semibold text-stone-800 dark:text-stone-200">Safety Tips & QR Code Usage</h2>
-      <ul className="list-disc list-inside mt-4 text-stone-600 dark:text-stone-400">
-      <li>Place your QR code tag on your helmet, vehicle, or ID card for easy access.</li>
-      <li>Ensure the QR code is not obstructed by scratches or dirt for proper scanning.</li>
-      <li>Share your tag ID with trusted contacts for emergencies.</li>
-      <li>Do not share sensitive personal details through the QR code.</li>
-      </ul>
-      </div>
-
-      <div className="mt-10">
-      <h2 className="text-xl font-semibold text-stone-800 dark:text-stone-200">Where to Use OpenTag</h2>
-      <ul className="list-disc list-inside mt-4 text-stone-600 dark:text-stone-400">
-      <li>Stick the QR code tag on your backpack, helmet, car, or any personal item.</li>
-      <li>Print six tags on a sheet, cut them out, and stick them using tape.</li>
-      <li>Ensure the tags are placed in visible and easily accessible locations.</li>
-      <li>Replace the tags if they get damaged or worn out.</li>
-      </ul>
-      </div>
-      <div className="mt-10">
-        <h2 className="text-xl font-semibold text-stone-800 dark:text-stone-200">Get Creative with Your QR Codes</h2>
-        <p className="mt-4 text-stone-600 dark:text-stone-400">
-          Feel free to customize your QR codes to match your style! You can use different colors, add logos, or even create unique designs. Just make sure the QR code remains scannable. Here are some tips:
-        </p>
-        <ul className="list-disc list-inside mt-4 text-stone-600 dark:text-stone-400">
-          <li>Use high-contrast colors for the QR code and background.</li>
-          <li>Experiment with different shapes and patterns, but keep the core structure intact.</li>
-          <li>Test your custom QR codes with multiple devices to ensure they work properly.</li>
-        </ul>
-      </div>
-      </div>
-    </div>
+      {/* Delete Account Dialog */}
+      <DeleteAccountDialog
+        isOpen={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleDeleteAccount}
+      />
+    </PageWrapper>
   );
 };
 

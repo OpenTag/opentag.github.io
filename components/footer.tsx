@@ -15,7 +15,6 @@ export function Footer() {
             <span className="text-stone-600 dark:text-stone-400 text-sm">This project is under the MIT License</span>
           </div>
             <div className="hidden sm:flex flex-col gap-4 text-sm text-stone-600 dark:text-stone-400 justify-center sm:justify-end text-center sm:text-right">
-            <Link href="/about" className="hover:text-stone-800 dark:hover:text-stone-200">About</Link>
             <Link href="/register" className="hover:text-stone-800 dark:hover:text-stone-200">Get a Tag</Link>
             <Link href="/terms" className="hover:text-stone-800 dark:hover:text-stone-200">Terms of Service</Link>
             </div>

@@ -2,10 +2,15 @@
 
 import { useState } from "react"
 import { useSearchParams } from "next/navigation"
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Phone } from "lucide-react"
 import Image from "next/image"
+import { PageWrapper } from "@/components/ui/page-wrapper"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
+import { PinInputDialog } from "@/components/ui/pin-input-dialog"
+import { Badge } from "@/components/ui/badge"
 
 const allergiesList = ["Pollen", "Dust", "Pet Dander", "Peanuts", "Shellfish"]
 const medicationsList = ["Aspirin", "Ibuprofen", "Penicillin", "Insulin", "Metformin"]
@@ -62,9 +67,10 @@ interface DecodedData {
 const DataDisplayPage = () => {
   const searchParams = useSearchParams()
   const [showModal, setShowModal] = useState(false)
-  const [pin, setPin] = useState("")
+  const [pinDialogOpen, setPinDialogOpen] = useState(true)
   const [decodedData, setDecodedData] = useState<DecodedData | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [isVerifying, setIsVerifying] = useState(false)
 
   const decryptData = (encryptedData: string, pin: string): string => {
     const decoded = atob(encryptedData)
@@ -126,167 +132,191 @@ const DataDisplayPage = () => {
     }
   }
 
-  const handleDecrypt = () => {
+  const handleDecrypt = async (pin: string) => {
     const encryptedData = searchParams.get("")
     if (!encryptedData) {
-      setError("OpenTag might me damaged")
+      setError("OpenTag might be damaged")
       return
     }
 
+    setIsVerifying(true)
+    setError(null)
+
     try {
+      // Add a small delay to show loading state
+      await new Promise(resolve => setTimeout(resolve, 500))
+      
       const decryptedData = decryptData(encryptedData, pin)
       const decoded = decodeData(decryptedData)
       setDecodedData(decoded)
+      setPinDialogOpen(false)
       setError(null)
     } catch (err) {
       setError("Incorrect PIN")
+    } finally {
+      setIsVerifying(false)
     }
   }
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center md:my-auto p-4 sm:p-8 dark:bg-black">
-      <div className="w-full max-w-2xl flex-grow"> 
-        <h1 className="font-bold text-3xl text-center mb-8 dark:text-white">
-          OpenTag <span className="text-red-500 dark:text-red-600 italic">Serverless</span>
-        </h1>
-        {!decodedData && (
+    <PageWrapper>
+      <div className="w-full max-w-2xl mx-auto">
+        <div className="flex flex-col items-center mb-8">
+          <h1 className="font-bold text-3xl text-center dark:text-white">
+            OpenTag <span className="text-red-500 dark:text-red-600 italic">Serverless</span>
+          </h1>
+        </div>
+
+        {!decodedData ? (
           <>
-            {showModal && (
-              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                <div className="bg-white p-4 m-4 rounded-lg shadow-lg max-w-md w-full dark:bg-black dark:text-white">
-                  <div className="flex justify-end">
-                    <button
-                      className="text-red-500"
-                      onClick={() => setShowModal(false)}
-                    >
-                      Close
-                    </button>
-                  </div>
-                  <div className="flex justify-center">
-                    <Image src="/instructions.png" alt="OpenTag Instructions" width={400} height={400} />
-                  </div>
+            <PinInputDialog
+              isOpen={pinDialogOpen}
+              onClose={() => {}}
+              onVerify={handleDecrypt}
+              title="Enter PIN"
+              description="Enter the 4-digit PIN to access medical information"
+              isVerifying={isVerifying}
+              error={error}
+            />
+
+            {/* Help Modal */}
+            <Dialog open={showModal} onOpenChange={setShowModal}>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>How to Find PIN</DialogTitle>
+                </DialogHeader>
+                <div className="flex justify-center p-2">
+                  <Image 
+                    src="/instructions.png" 
+                    alt="OpenTag Instructions" 
+                    width={400} 
+                    height={400}
+                    className="rounded-lg"
+                  />
                 </div>
-              </div>
-            )}
-            <div className="bg-white shadow-md rounded-lg p-6 dark:bg-stone-800">
-              <h2 className="text-xl font-semibold mb-4 dark:text-white">Enter PIN</h2>
-              <div className="space-y-4">
-                <Input
-                  type="password"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  placeholder="Enter 4-digit PIN"
-                  value={pin}
-                  onChange={(e) => setPin(e.target.value)}
-                  maxLength={4}
-                />
-                <Button onClick={handleDecrypt} className="w-full">
-                  Verify PIN
-                </Button>
-                {error && <p className="text-red-500 dark:text-red-600">{error}</p>}
-              </div>
-            </div>
+                <DialogFooter>
+                  <Button onClick={() => setShowModal(false)}>Close</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+
             <div className="flex justify-center mt-4">
-              <button
-                className="text-red-500 underline"
+              <Button 
+                variant="link"
+                className="text-red-500"
                 onClick={() => setShowModal(true)}
               >
-                Can't find pin? Click here
-              </button>
+                Can't find PIN? Click here
+              </Button>
             </div>
           </>
-        )}
-        {decodedData && (
-          <div className="bg-white shadow-md rounded-lg p-6 dark:bg-stone-800">
-            <h2 className="text-3xl sm:text-4xl font-bold text-center mb-4 dark:text-white">
-              {decodedData.name} - <span className="text-4xl font-bold text-red-500">{decodedData.bloodGroup}</span>
-            </h2>
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-2xl font-semibold dark:text-white">Personal Details</h3>
-                <div className="mt-2 dark:text-stone-300">
-                  <span>Date of Birth: {decodedData.dob}</span>
-                </div>
-                <div className="mt-2 dark:text-stone-300">
-                  <span>Age: {decodedData.age} years</span>
-                </div>
-                <div className="mt-2 dark:text-stone-300">
-                  <span>Height: {parseInt(decodedData.height)} cm ({(parseFloat(decodedData.height) / 2.54).toFixed(2)} inches)</span>
-                </div>
-                <div className="mt-2 dark:text-stone-300">
-                  <span>Weight: {parseInt(decodedData.weight)} kg ({(parseFloat(decodedData.weight) * 2.20462).toFixed(2)} lbs)</span>
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-3xl text-center">
+                {decodedData.name} - <span className="text-red-500">{decodedData.bloodGroup}</span>
+              </CardTitle>
+            </CardHeader>
+            
+            <CardContent className="space-y-6">
+              <div className="space-y-2">
+                <h3 className="text-xl font-semibold">Personal Details</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="p-2 bg-muted rounded-md">
+                    <span className="text-sm font-medium">Date of Birth:</span>
+                    <p>{decodedData.dob}</p>
+                  </div>
+                  <div className="p-2 bg-muted rounded-md">
+                    <span className="text-sm font-medium">Age:</span>
+                    <p>{decodedData.age} years</p>
+                  </div>
+                  <div className="p-2 bg-muted rounded-md">
+                    <span className="text-sm font-medium">Height:</span>
+                    <p>{parseInt(decodedData.height)} cm ({(parseInt(decodedData.height) / 2.54).toFixed(1)} in)</p>
+                  </div>
+                  <div className="p-2 bg-muted rounded-md">
+                    <span className="text-sm font-medium">Weight:</span>
+                    <p>{parseInt(decodedData.weight)} kg ({(parseInt(decodedData.weight) * 2.20462).toFixed(1)} lbs)</p>
+                  </div>
                 </div>
               </div>
+
               <div>
-                <span className="text-xl font-semibold dark:text-white">Emergency Contact</span>
-                <ul className="list-disc list-inside dark:text-stone-300">
-                  <li className="flex items-center gap-2 my-2">
-                    <span>{decodedData.emergencyContact}</span>
-                    <button
-                      className="bg-red-500 text-white px-3 py-2 rounded ml-2 flex items-center gap-1"
-                      onClick={() => window.location.href = `tel:${decodedData.emergencyContact}`}
-                    >
-                      <Phone className="h-5 w-5" />
-                    </button>
-                  </li>
-                </ul>
+                <h3 className="text-xl font-semibold mb-2">Emergency Contact</h3>
+                <div className="flex items-center gap-2 p-2 bg-muted rounded-md">
+                  <span className="flex-grow font-medium">{decodedData.emergencyContact}</span>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    className="flex items-center gap-1"
+                    onClick={() => window.location.href = `tel:${decodedData.emergencyContact}`}
+                  >
+                    <Phone className="h-4 w-4" />
+                    <span>Call</span>
+                  </Button>
+                </div>
               </div>
-                  <div>
-                  <span className="text-xl font-semibold dark:text-white">Substance Use</span>
-                  <div className="mt-2">
-                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full dark:bg-blue-900 dark:text-blue-200">{decodedData.substanceUse}</span>
-                  </div>
-                  </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <span className="text-xl font-semibold dark:text-white">Pregnant</span>
-                  <div className="mt-2">
-                  <span className={`px-2 py-1 rounded-full ${decodedData.pregnant ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"}`}>
+                  <h3 className="text-lg font-semibold mb-2">Substance Use</h3>
+                  <Badge variant="outline" className="w-full justify-center py-1.5">
+                    {decodedData.substanceUse}
+                  </Badge>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">Pregnant</h3>
+                  <Badge variant={decodedData.pregnant ? "success" : "destructive"} className="w-full justify-center py-1.5">
                     {decodedData.pregnant ? "Yes" : "No"}
-                  </span>
-                  </div>
+                  </Badge>
                 </div>
+                
                 <div>
-                  <span className="text-xl font-semibold dark:text-white">Organ Donor</span>
-                  <div className="mt-2">
-                  <span className={`px-2 py-1 rounded-full ${decodedData.organDonor ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200" : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"}`}>
+                  <h3 className="text-lg font-semibold mb-2">Organ Donor</h3>
+                  <Badge variant={decodedData.organDonor ? "success" : "destructive"} className="w-full justify-center py-1.5">
                     {decodedData.organDonor ? "Yes" : "No"}
-                  </span>
+                  </Badge>
+                </div>
+              </div>
+
+              {decodedData.allergies.length > 0 && (
+                <div>
+                  <h3 className="text-xl font-semibold mb-2">Allergies</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {decodedData.allergies.map((allergy, index) => (
+                      <Badge key={index} variant="warning">{allergy}</Badge>
+                    ))}
                   </div>
                 </div>
-                {decodedData.allergies.length > 0 && (
-                  <div>
-                  <span className="text-xl font-semibold dark:text-white">Allergies</span>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {decodedData.allergies.map((allergy, index) => (
-                    <span key={index} className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full dark:bg-yellow-900 dark:text-yellow-200">{allergy}</span>
-                    ))}
-                  </div>
-                  </div>
-                )}
-                {decodedData.medications.length > 0 && (
-                  <div>
-                  <span className="text-xl font-semibold dark:text-white">Medications</span>
-                  <div className="mt-2 flex flex-wrap gap-2">
+              )}
+
+              {decodedData.medications.length > 0 && (
+                <div>
+                  <h3 className="text-xl font-semibold mb-2">Medications</h3>
+                  <div className="flex flex-wrap gap-2">
                     {decodedData.medications.map((medication, index) => (
-                    <span key={index} className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full dark:bg-purple-900 dark:text-purple-200">{medication}</span>
+                      <Badge key={index} variant="secondary">{medication}</Badge>
                     ))}
                   </div>
-                  </div>
-                )}
-                {decodedData.medicalConditions.length > 0 && (
-                  <div>
-                  <span className="text-xl font-semibold dark:text-white">Medical Conditions</span>
-                  <div className="mt-2 flex flex-wrap gap-2">
+                </div>
+              )}
+
+              {decodedData.medicalConditions.length > 0 && (
+                <div>
+                  <h3 className="text-xl font-semibold mb-2">Medical Conditions</h3>
+                  <div className="flex flex-wrap gap-2">
                     {decodedData.medicalConditions.map((condition, index) => (
-                    <span key={index} className="bg-red-100 text-red-800 px-2 py-1 rounded-full dark:bg-red-900 dark:text-red-200">{condition}</span>
+                      <Badge key={index} variant="destructive">{condition}</Badge>
                     ))}
                   </div>
-                  </div>
-                )}
-            </div>
-          </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         )}
       </div>
-    </div>
+    </PageWrapper>
   )
 }
 
