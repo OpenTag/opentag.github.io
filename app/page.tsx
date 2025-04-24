@@ -99,10 +99,10 @@ export default function Home() {
 
   const getRecommendedTag = () => {
     let onlineScore = 0;
-    if (userResponses.chronicCondition) onlineScore += 2;
+    if (userResponses.chronicCondition) onlineScore += 1;
     if (userResponses.frequentUpdates) onlineScore += 2;
     if (userResponses.emergencyAccess) onlineScore += 1;
-    if (userResponses.detailedHistory) onlineScore += 2;
+    if (userResponses.detailedHistory) onlineScore -= 2;
 
     return onlineScore >= 3 ? 'online' : 'serverless';
   };
@@ -112,7 +112,7 @@ export default function Home() {
       title: "Choose Your Tag Type",
       content: (
         <div className="space-y-4">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-stone-500 dark:text-stone-400">
             Help us suggest the right tag type for your needs by answering a few quick questions.
           </p>
           <div className="flex justify-between mt-4">
@@ -137,12 +137,12 @@ export default function Home() {
                 type="checkbox"
                 checked={userResponses.chronicCondition}
                 onChange={() => handleToggleResponse('chronicCondition')}
-                className="w-4 h-4 border border-gray-300 rounded accent-red-600"
+                className="w-4 h-4 border border-stone-300 rounded accent-red-600"
               />
             </div>
             <div className="ml-3 text-sm">
-              <label htmlFor="chronic" className="font-medium text-gray-700 dark:text-gray-300">I have chronic conditions that require ongoing management</label>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Like diabetes, heart disease, asthma, etc.</p>
+              <label htmlFor="chronic" className="font-medium text-stone-700 dark:text-stone-300">I have chronic conditions that require ongoing management</label>
+              <p className="text-xs text-stone-500 dark:text-stone-400">Like diabetes, heart disease, asthma, etc.</p>
             </div>
           </div>
           
@@ -153,12 +153,12 @@ export default function Home() {
                 type="checkbox"
                 checked={userResponses.detailedHistory}
                 onChange={() => handleToggleResponse('detailedHistory')}
-                className="w-4 h-4 border border-gray-300 rounded accent-red-600"
+                className="w-4 h-4 border border-stone-300 rounded accent-red-600"
               />
             </div>
             <div className="ml-3 text-sm">
-              <label htmlFor="history" className="font-medium text-gray-700 dark:text-gray-300">I have a detailed medical history</label>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Multiple diagnoses, procedures, or treatments</p>
+              <label htmlFor="history" className="font-medium text-stone-700 dark:text-stone-300">I have a detailed medical history</label>
+              <p className="text-xs text-stone-500 dark:text-stone-400">Multiple diagnoses, procedures, or treatments</p>
             </div>
           </div>
           
@@ -184,12 +184,12 @@ export default function Home() {
                 type="checkbox"
                 checked={userResponses.frequentUpdates}
                 onChange={() => handleToggleResponse('frequentUpdates')}
-                className="w-4 h-4 border border-gray-300 rounded accent-red-600"
+                className="w-4 h-4 border border-stone-300 rounded accent-red-600"
               />
             </div>
             <div className="ml-3 text-sm">
-              <label htmlFor="updates" className="font-medium text-gray-700 dark:text-gray-300">I need to update my medical information frequently</label>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Regular doctor visits, changing medications, etc.</p>
+              <label htmlFor="updates" className="font-medium text-stone-700 dark:text-stone-300">I need to update my medical information frequently</label>
+              <p className="text-xs text-stone-500 dark:text-stone-400">Regular doctor visits, changing medications, etc.</p>
             </div>
           </div>
           
@@ -200,12 +200,12 @@ export default function Home() {
                 type="checkbox"
                 checked={userResponses.emergencyAccess}
                 onChange={() => handleToggleResponse('emergencyAccess')}
-                className="w-4 h-4 border border-gray-300 rounded accent-red-600"
+                className="w-4 h-4 border border-stone-300 rounded accent-red-600"
               />
             </div>
             <div className="ml-3 text-sm">
-              <label htmlFor="emergency" className="font-medium text-gray-700 dark:text-gray-300">I want medical professionals to access my data in emergencies</label>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Provides quick access to critical information</p>
+              <label htmlFor="emergency" className="font-medium text-stone-700 dark:text-stone-300">I dont have huge medical history</label>
+              <p className="text-xs text-stone-500 dark:text-stone-400">I just want to store my basic information</p>
             </div>
           </div>
           
@@ -230,10 +230,10 @@ export default function Home() {
                 <Cloud className="mr-2 text-green-500" size={24} />
                 <h3 className="font-semibold text-green-700 dark:text-green-400">We Recommend: Online Tag</h3>
               </div>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+              <p className="text-sm text-stone-600 dark:text-stone-300">
                 Based on your needs, an Online Tag would be best for you. It offers:
               </p>
-              <ul className="mt-2 space-y-1 text-sm text-gray-600 dark:text-gray-300">
+              <ul className="mt-2 space-y-1 text-sm text-stone-600 dark:text-stone-300">
                 <li className="flex items-start">
                   <CheckCircle className="mr-1.5 h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
                   <span>Cloud storage with unlimited capacity</span>
@@ -258,10 +258,10 @@ export default function Home() {
                 <Database className="mr-2 text-green-500" size={24} />
                 <h3 className="font-semibold text-green-700 dark:text-green-400">We Recommend: Serverless Tag</h3>
               </div>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+              <p className="text-sm text-stone-600 dark:text-stone-300">
                 Based on your needs, a Serverless Tag would work well for you. It offers:
               </p>
-              <ul className="mt-2 space-y-1 text-sm text-gray-600 dark:text-gray-300">
+              <ul className="mt-2 space-y-1 text-sm text-stone-600 dark:text-stone-300">
                 <li className="flex items-start">
                   <CheckCircle className="mr-1.5 h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
                   <span>Data stored directly in a QR code</span>
@@ -340,7 +340,7 @@ export default function Home() {
             </div>
             <div className="flex justify-center relative">
               <div className="relative w-64 h-64 sm:w-96 sm:h-96">
-                <div className="absolute inset-0 bg-gray-100 dark:bg-gray-800/20 rounded-full animate-pulse" style={{ animationDuration: '3s' }}></div>
+                <div className="absolute inset-0 bg-stone-100 dark:bg-stone-800/20 rounded-full animate-pulse" style={{ animationDuration: '3s' }}></div>
                 <Image
                   src="/opentag.png"
                   alt="OpenTag Medical ID"
@@ -358,7 +358,7 @@ export default function Home() {
       </section>
 
       {/* Emergency Stats Section */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-900/20">
+      <section className="py-16 bg-stone-50 dark:bg-stone-900/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">The Reality of Medical Emergencies</h2>
@@ -370,7 +370,7 @@ export default function Home() {
             {emergencyStats.map((stat, index) => (
               <div 
                 key={index} 
-                className="flex flex-col items-center text-center p-8 bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
+                className="flex flex-col items-center text-center p-8 bg-white dark:bg-stone-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300"
               >
                 <h3 className="text-5xl font-bold text-red-600 mb-4">{stat.number}</h3>
                 <p className="text-muted-foreground mb-4">{stat.description}</p>
@@ -399,7 +399,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="flex flex-col items-center text-center p-6 bg-gray-50 dark:bg-gray-900 rounded-xl shadow-md">
+            <div className="flex flex-col items-center text-center p-6 bg-stone-50 dark:bg-stone-900 rounded-xl shadow-md">
               <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-6">
                 <Users className="h-8 w-8 text-red-600" />
               </div>
@@ -409,7 +409,7 @@ export default function Home() {
               </p>
             </div>
             
-            <div className="flex flex-col items-center text-center p-6 bg-gray-50 dark:bg-gray-900 rounded-xl shadow-md">
+            <div className="flex flex-col items-center text-center p-6 bg-stone-50 dark:bg-stone-900 rounded-xl shadow-md">
               <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-6">
                 <Smartphone className="h-8 w-8 text-red-600" />
               </div>
@@ -419,7 +419,7 @@ export default function Home() {
               </p>
             </div>
             
-            <div className="flex flex-col items-center text-center p-6 bg-gray-50 dark:bg-gray-900 rounded-xl shadow-md">
+            <div className="flex flex-col items-center text-center p-6 bg-stone-50 dark:bg-stone-900 rounded-xl shadow-md">
               <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-6">
                 <Clock className="h-8 w-8 text-red-600" />
               </div>
@@ -433,7 +433,7 @@ export default function Home() {
       </section>
 
       {/* Tag Example Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900/20">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-stone-50 dark:bg-stone-900/20">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="relative w-full h-72 sm:h-96">
@@ -515,7 +515,7 @@ export default function Home() {
       </section>
 
       {/* Use Cases Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-100 dark:bg-gray-900">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-stone-100 dark:bg-stone-900">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">Where to Use OpenTag</h2>
@@ -534,7 +534,7 @@ export default function Home() {
               { icon: Baby, title: "Children's Items", description: "Add to your child's belongings for extra safety" },
               { icon: Smartphone, title: "Phone Cases", description: "Always have your information on hand" },
             ].map(({ icon: Icon, title, description }, index) => (
-              <div key={index} className="flex flex-col items-center text-center p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <div key={index} className="flex flex-col items-center text-center p-6 bg-white dark:bg-stone-800 rounded-lg shadow-md hover:shadow-lg transition-shadow">
                 <Icon className="h-10 w-10 text-red-600 mb-4" />
                 <h3 className="text-lg font-semibold mb-2">{title}</h3>
                 <p className="text-sm text-muted-foreground">{description}</p>
@@ -551,19 +551,19 @@ export default function Home() {
             <h2 className="text-3xl font-bold mb-4">Frequently Asked Questions</h2>
           </div>
           <div className="space-y-6">
-            <div className="bg-gray-50 dark:bg-gray-900 p-6 rounded-lg shadow-md">
+            <div className="bg-stone-50 dark:bg-stone-900 p-6 rounded-lg shadow-md">
               <h3 className="text-xl font-semibold mb-2">Is my medical information secure?</h3>
               <p className="text-muted-foreground">
                 Absolutely. We use end-to-end encryption and follow healthcare industry standards (HIPAA-compliant) to ensure your data is protected at all times.
               </p>
             </div>
-            <div className="bg-gray-50 dark:bg-gray-900 p-6 rounded-lg shadow-md">
+            <div className="bg-stone-50 dark:bg-stone-900 p-6 rounded-lg shadow-md">
               <h3 className="text-xl font-semibold mb-2">How do emergency responders know to look for my OpenTag?</h3>
               <p className="text-muted-foreground">
                 OpenTag is becoming widely recognized among emergency services. Each tag is clearly marked with instructions, and we conduct ongoing education programs for first responders.
               </p>
             </div>
-            <div className="bg-gray-50 dark:bg-gray-900 p-6 rounded-lg shadow-md">
+            <div className="bg-stone-50 dark:bg-stone-900 p-6 rounded-lg shadow-md">
               <h3 className="text-xl font-semibold mb-2">Can I update my information?</h3>
               <p className="text-muted-foreground">
                 Yes, you can update your medical information anytime through your secure account. Changes are reflected immediately when your QR code is scanned.
@@ -574,7 +574,7 @@ export default function Home() {
       </section>
 
       {/* Security and Compliance Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900">
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-stone-50 dark:bg-stone-900">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">Enterprise-Grade Security & Compliance</h2>
@@ -584,7 +584,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="flex flex-col items-center text-center p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md">
+            <div className="flex flex-col items-center text-center p-6 bg-white dark:bg-stone-800 rounded-xl shadow-md">
               <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-6">
                 <ShieldCheck className="h-8 w-8 text-red-600" />
               </div>
@@ -608,7 +608,7 @@ export default function Home() {
               </ul>
             </div>
             
-            <div className="flex flex-col items-center text-center p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md">
+            <div className="flex flex-col items-center text-center p-6 bg-white dark:bg-stone-800 rounded-xl shadow-md">
               <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-6">
                 <Database className="h-8 w-8 text-red-600" />
               </div>
@@ -632,7 +632,7 @@ export default function Home() {
               </ul>
             </div>
             
-            <div className="flex flex-col items-center text-center p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md">
+            <div className="flex flex-col items-center text-center p-6 bg-white dark:bg-stone-800 rounded-xl shadow-md">
               <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-6">
                 <AlertTriangle className="h-8 w-8 text-red-600" />
               </div>
@@ -677,10 +677,10 @@ export default function Home() {
       {/* Tag Selection Modal */}
       {showTagModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
+          <div className="bg-white dark:bg-stone-800 rounded-lg p-6 max-w-md w-full mx-4">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">{steps[currentStep].title}</h2>
-              <div className="text-sm text-gray-500 dark:text-gray-400">
+              <div className="text-sm text-stone-500 dark:text-stone-400">
                 Step {currentStep + 1} of {steps.length}
               </div>
             </div>

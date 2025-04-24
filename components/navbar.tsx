@@ -95,7 +95,7 @@ export function Navbar() {
       title: "Choose Your Tag Type",
       content: (
         <div className="space-y-4">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-stone-500 dark:text-stone-400">
             Help us suggest the right tag type for your needs by answering a few quick questions.
           </p>
           <div className="flex justify-between mt-4">
@@ -120,12 +120,12 @@ export function Navbar() {
                 type="checkbox"
                 checked={userResponses.chronicCondition}
                 onChange={() => handleToggleResponse('chronicCondition')}
-                className="w-4 h-4 border border-gray-300 rounded accent-red-600"
+                className="w-4 h-4 border border-stone-300 rounded accent-red-600"
               />
             </div>
             <div className="ml-3 text-sm">
-              <label htmlFor="chronic" className="font-medium text-gray-700 dark:text-gray-300">I have chronic conditions that require ongoing management</label>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Like diabetes, heart disease, asthma, etc.</p>
+              <label htmlFor="chronic" className="font-medium text-stone-700 dark:text-stone-300">I have chronic conditions that require ongoing management</label>
+              <p className="text-xs text-stone-500 dark:text-stone-400">Like diabetes, heart disease, asthma, etc.</p>
             </div>
           </div>
           
@@ -136,12 +136,12 @@ export function Navbar() {
                 type="checkbox"
                 checked={userResponses.detailedHistory}
                 onChange={() => handleToggleResponse('detailedHistory')}
-                className="w-4 h-4 border border-gray-300 rounded accent-red-600"
+                className="w-4 h-4 border border-stone-300 rounded accent-red-600"
               />
             </div>
             <div className="ml-3 text-sm">
-              <label htmlFor="history" className="font-medium text-gray-700 dark:text-gray-300">I have a detailed medical history</label>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Multiple diagnoses, procedures, or treatments</p>
+              <label htmlFor="history" className="font-medium text-stone-700 dark:text-stone-300">I have a detailed medical history</label>
+              <p className="text-xs text-stone-500 dark:text-stone-400">Multiple diagnoses, procedures, or treatments</p>
             </div>
           </div>
           
@@ -167,12 +167,12 @@ export function Navbar() {
                 type="checkbox"
                 checked={userResponses.frequentUpdates}
                 onChange={() => handleToggleResponse('frequentUpdates')}
-                className="w-4 h-4 border border-gray-300 rounded accent-red-600"
+                className="w-4 h-4 border border-stone-300 rounded accent-red-600"
               />
             </div>
             <div className="ml-3 text-sm">
-              <label htmlFor="updates" className="font-medium text-gray-700 dark:text-gray-300">I need to update my medical information frequently</label>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Regular doctor visits, changing medications, etc.</p>
+              <label htmlFor="updates" className="font-medium text-stone-700 dark:text-stone-300">I need to update my medical information frequently</label>
+              <p className="text-xs text-stone-500 dark:text-stone-400">Regular doctor visits, changing medications, etc.</p>
             </div>
           </div>
           
@@ -183,12 +183,12 @@ export function Navbar() {
                 type="checkbox"
                 checked={userResponses.emergencyAccess}
                 onChange={() => handleToggleResponse('emergencyAccess')}
-                className="w-4 h-4 border border-gray-300 rounded accent-red-600"
+                className="w-4 h-4 border border-stone-300 rounded accent-red-600"
               />
             </div>
             <div className="ml-3 text-sm">
-              <label htmlFor="emergency" className="font-medium text-gray-700 dark:text-gray-300">I want medical professionals to access my data in emergencies</label>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Provides quick access to critical information</p>
+              <label htmlFor="emergency" className="font-medium text-stone-700 dark:text-stone-300">I want medical professionals to access my data in emergencies</label>
+              <p className="text-xs text-stone-500 dark:text-stone-400">Provides quick access to critical information</p>
             </div>
           </div>
           
@@ -213,10 +213,10 @@ export function Navbar() {
                 <Cloud className="mr-2 text-green-500" size={24} />
                 <h3 className="font-semibold text-green-700 dark:text-green-400">We Recommend: Online Tag</h3>
               </div>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+              <p className="text-sm text-stone-600 dark:text-stone-300">
                 Based on your needs, an Online Tag would be best for you. It offers:
               </p>
-              <ul className="mt-2 space-y-1 text-sm text-gray-600 dark:text-gray-300">
+              <ul className="mt-2 space-y-1 text-sm text-stone-600 dark:text-stone-300">
                 <li className="flex items-start">
                   <CheckCircle className="mr-1.5 h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
                   <span>Cloud storage with unlimited capacity</span>
@@ -241,10 +241,10 @@ export function Navbar() {
                 <Database className="mr-2 text-green-500" size={24} />
                 <h3 className="font-semibold text-green-700 dark:text-green-400">We Recommend: Serverless Tag</h3>
               </div>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+              <p className="text-sm text-stone-600 dark:text-stone-300">
                 Based on your needs, a Serverless Tag would work well for you. It offers:
               </p>
-              <ul className="mt-2 space-y-1 text-sm text-gray-600 dark:text-gray-300">
+              <ul className="mt-2 space-y-1 text-sm text-stone-600 dark:text-stone-300">
                 <li className="flex items-start">
                   <CheckCircle className="mr-1.5 h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
                   <span>Data stored directly in a QR code</span>
@@ -396,10 +396,10 @@ export function Navbar() {
       {/* Tag Selection Modal */}
       {showTagModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4">
+          <div className="bg-white dark:bg-stone-800 rounded-lg p-6 max-w-md w-full mx-4">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">{steps[currentStep].title}</h2>
-              <div className="text-sm text-gray-500 dark:text-gray-400">
+              <div className="text-sm text-stone-500 dark:text-stone-400">
                 Step {currentStep + 1} of {steps.length}
               </div>
             </div>

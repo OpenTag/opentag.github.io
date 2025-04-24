@@ -10,7 +10,7 @@ export default function RegisterPage() {
           <CardHeader>
             <CardTitle className="text-2xl">Register for OpenTag</CardTitle>
             <CardDescription>
-              Create your account to get your digital vehicle tag
+              Create your account to manage and create tags.
             </CardDescription>
           </CardHeader>
           <CardContent>
